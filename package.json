@@ -1,4 +1,6 @@
 {
+  "name": "edamama-api",
+  "version": "0.0.0",
   "scripts": {
     "dev": "nodemon build/index.js",
     "clean-build": "$(npm bin)/rimraf build",

@@ -1,22 +1,18 @@
-
-function runProd () {
+function runProd() {
   const helpers = require('./helper.ts');
   const webpack = require('webpack');
   const fs = require('fs');
-  const path = require('path');
-  const Envi   = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 
   module.exports = {
     mode: 'production',
     entry: {
-      'index': helpers.root('index.ts')
+      index: helpers.root('index.ts'),
     },
     resolve: {
-      extensions: ['.ts']
+      extensions: ['.ts'],
     },
     target: 'node',
-    externals: fs.readdirSync('node_modules')
-    .reduce(function(acc, mod) {
+    externals: fs.readdirSync('node_modules').reduce(function (acc: any, mod: any) {
       if (mod === '.bin') {
         return acc;
       }
@@ -38,19 +34,19 @@ function runProd () {
       filename: '[name].js',
     },
     module: {
-      rules: [{
-        test: /\.ts$/,
-        exclude: /node_modules/,
-        loaders: ['ts-loader']
-      }]
+      rules: [
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          rules: [{ test: /\.ts$/, use: 'ts-loader' }],
+        },
+      ],
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-
-        }
-      })
-    ]
+        'process.env': {},
+      }),
+    ],
   };
 }
 

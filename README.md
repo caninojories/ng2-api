@@ -1,22 +1,71 @@
-# NodeJS Api Boilerplate
-###### As simple as it seems for your back-end api implementation
+<h1 align="center">Edamama Api</h1>
 
-Install
-=======
+## Description
 
-Installing this boilerplate is extremely simple!
-git clone https://github.com/caninojories/ng2-api.git
-cd ng2-api
-yarn or yarn instal (First install yarn - npm install -g yarn)
+Api Implementation.
 
-Pre-requirements
-=======
+## Requirements
+1. [Node.JS](https://nodejs.org/en/download) LTS version (v12.18.3)
+2. [Docker](https://www.docker.com)
+3. [Docker Compose](https://docs.docker.com/compose/install)
 
-SOON!!
+## docker-compose
 
-Building
-=======
+```bash
+# run at the root of the project folder
+# will run the mongodb via docker-compose
+$ docker-compose up -d
+```
 
-`npm run dev` --> Used to run the application
-`npm run test` --> Used to run unit test
-`npm run test-sample` --> Sample implementation for a unit test
+## Seed
+```bash
+# run at the root of the project folder
+# will run the mongodb via docker-compose
+$ npm run create-products
+```
+
+## Installation
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# compile first and watch for ts changes
+npm run build-dev
+
+# development
+$ npm run dev
+
+# production mode
+$ npm run prod --> soon
+```
+
+## Utilities
+```bash
+# check style format ts
+$ npm run format
+
+# fix style format ts
+$ npm run format:fix
+
+# lint ts
+$ npm run lint
+
+# fix lint ts
+$ npm run lint:fix
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test --> soon
+# for now run a sample test
+$ npm run test-sample
+
+# test coverage
+$ npm run test:cov --> soon
+```

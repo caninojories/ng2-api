@@ -1,4 +1,4 @@
-import {Model} from 'mongoose';
+import { Model } from 'mongoose';
 
 export enum ResponseType {
   ok,
@@ -41,7 +41,7 @@ export class ResponseData implements IResponseData {
     });
   }
 
-  public static createOk(message: string): ResponseData {
+  public static createOk(message?: string): ResponseData {
     return new ResponseData({
       code: ResponseType.ok,
       type: ResponseType[ResponseType.ok],
@@ -130,7 +130,9 @@ export class ResponseData implements IResponseData {
     });
   }
 
-  public static createDataInstance(data: any): ResponseData {
+  public static createDataInstance(
+    data: string | Record<string, unknown> | number | Array<any>
+  ): ResponseData {
     return new ResponseData({
       code: ResponseType.ok,
       type: ResponseType[ResponseType.ok],
@@ -138,7 +140,7 @@ export class ResponseData implements IResponseData {
     });
   }
 
-  public static createUnsupportedPatchPath(message: any): ResponseData {
+  public static createUnsupportedPatchPath(message: string): ResponseData {
     return new ResponseData({
       code: ResponseType.unsupportedPatchPath,
       type: ResponseType[ResponseType.unsupportedPatchPath],
@@ -146,7 +148,7 @@ export class ResponseData implements IResponseData {
     });
   }
 
-  public static createUnsupportedPatchOperation(message: any): ResponseData {
+  public static createUnsupportedPatchOperation(message: string): ResponseData {
     return new ResponseData({
       code: ResponseType.unsupportedPatchOperation,
       type: ResponseType[ResponseType.unsupportedPatchOperation],

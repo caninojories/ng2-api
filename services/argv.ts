@@ -1,8 +1,8 @@
-let argv = process.argv;
+const argv = process.argv;
 
-export let getArgv = function (arg) {
-  let argument;
-  let data = argv.filter(filter => {
+export const getArgv = function (arg: string): string | boolean {
+  let argument: string;
+  const data = argv.filter(filter => {
     argument = filter.split('=')[0];
 
     if (argument && argument === arg) {

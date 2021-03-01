@@ -1,68 +1,54 @@
-import {
-  injectable,
-  inject
-} from 'inversify';
-import {
-  Document,
-  model,
-  Model,
-  connection,
-  connect
-} from 'mongoose';
-import chalk from 'chalk';
+import { injectable } from 'inversify';
+import { connection, connect } from 'mongoose';
 import 'reflect-metadata';
+import { Logger } from '../util-lib/logger';
 
 @injectable()
 export class Mongo {
-  constructor(
-  ) {
-    // private connection? : String
-    // this._connection = this.connection;
-  }
-
-  private _connection;
-
-  init() : any {
+  init(): any {
     let connecting = 0;
     if (connection.readyState === 0) {
-      console.log(chalk.red.bold('Mongo DB Started'));
+      Logger.info('Mongo DB Started');
 
-      let connectingState;
+      let connectingState: any;
 
       connection.on('connecting', _ => {
         connectingState = setInterval(() => {
           connecting++;
 
           if (connecting <= 5) {
-            console.log(chalk.green.bold('Connecting...'));
+            Logger.info('Connecting...');
           }
         }, 300);
       });
 
       connection.on('connected', _ => {
         clearInterval(connectingState);
-        console.log(chalk.cyan.bold('Mongoose connection established successfully'));
+        Logger.info('Mongoose connection established successfully');
       });
 
       connection.on('disconnected', _ => {
         clearInterval(connectingState);
-        console.log(chalk.red.bold('Mongo DB connection closed'));
+        Logger.info('Mongo DB connection closed');
       });
 
-      connection.on('error', (error) => {
+      connection.on('error', error => {
         clearInterval(connectingState);
-        console.error('Connection to mongo failed ' + error);
+        Logger.error((('Connection to mongo failed ' + error) as unknown) as Error);
       });
 
       /*close our connection when the app stop*/
-      process.on('SIGINT', function() {
+      process.on('SIGINT', function () {
         connection.close(_ => {
-          console.log('Mongoose disconnected on app termination');
+          Logger.info('Mongoose disconnected on app termination');
           process.exit(0);
         });
       });
 
-      return connect('mongodb://192.168.0.140:27017/builder');
+      return connect('mongodb://127.0.0.1:27017/edamama', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
     }
   }
 }

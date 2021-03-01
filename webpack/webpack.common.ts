@@ -1,20 +1,16 @@
-
 function runWebpackCommon() {
-  let webpack = require('webpack');
-  let fs = require('fs');
-  let path = require('path');
-  let helpers = require('./helper.ts');
+  const fs = require('fs');
+  const helpers = require('./helper.ts');
 
   module.exports = {
     entry: {
-      'index': helpers.root('index.ts')
+      index: helpers.root('index.ts'),
     },
     resolve: {
-      extensions: ['.ts']
+      extensions: ['.ts'],
     },
     target: 'node',
-    externals: fs.readdirSync('node_modules')
-    .reduce(function(acc, mod) {
+    externals: fs.readdirSync('node_modules').reduce(function (acc: any, mod: any) {
       if (mod === '.bin') {
         return acc;
       }
@@ -24,10 +20,7 @@ function runWebpackCommon() {
       return acc;
     }, {}),
     node: {
-      console: false,
       global: false,
-      process: false,
-      Buffer: false,
       __filename: false,
       __dirname: false,
     },
@@ -36,12 +29,14 @@ function runWebpackCommon() {
       filename: '[name].js',
     },
     module: {
-      rules: [{
-        test: /\.ts$/,
-        exclude: /node_modules/,
-        loaders: ['ts-loader']
-      }]
-    }
+      rules: [
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          rules: [{ test: /\.ts$/, use: 'ts-loader' }],
+        },
+      ],
+    },
   };
 }
 

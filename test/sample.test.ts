@@ -1,8 +1,5 @@
-import {
-  Api
-} from '../api';
-import * as express from 'express';
-import {expect} from 'chai'
+import { Api } from '../api';
+import { expect } from 'chai';
 import * as sinon from 'sinon';
 import * as supertest from 'supertest';
 
@@ -11,10 +8,8 @@ describe('POST /api/v1/travel/addState', function () {
   let request;
 
   beforeEach(() => {
-    console.log('beforeEach')
     sandbox = sinon.createSandbox();
-    request = supertest(Api.getApp())
-              .get('/api/v1/user');
+    request = supertest(Api.getApi().app);
   });
 
   afterEach(() => {
@@ -23,9 +18,10 @@ describe('POST /api/v1/travel/addState', function () {
 
   it('sample test', () => {
     request
+      .get('/api/v1/products')
       .send({})
       .expect(200)
-      .then((response: express.Response) => {
+      .then((response: any) => {
         expect(response.body).to.be.equal('OK');
       });
   });

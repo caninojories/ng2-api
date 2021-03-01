@@ -1,31 +1,16 @@
 import * as express from 'express';
-import { injectable, inject, Container } from 'inversify';
-import 'reflect-metadata';
-import TYPES from './constant/types';
-import {
-  ExpressConfig
-} from './config/express';
-import {
-  Mongo
-} from './services/mongo';
-import {
-  Logger
-} from './util-lib/logger';
+import { injectable } from 'inversify';
 import * as http from 'http';
+import 'reflect-metadata';
+import { Mongo } from './services/mongo';
+import { Logger } from './util-lib/logger';
+import { Api } from './api';
 
 @injectable()
 export class Server {
-  constructor () {
-    this.onInit();
-  }
-
-  private expressConfig: ExpressConfig;
-  private app: express.Application = express();
+  private app: express.Application = Api.getApi().app;
   private server: http.Server;
-
-  private onInit() {
-    this.expressConfig = new ExpressConfig(this.app);
-  }
+  private mongo: Mongo = new Mongo();
 
   private onAfterInit() {
     this.server = http.createServer(this.app);
@@ -33,36 +18,38 @@ export class Server {
     this.server.on('listening', this.onListening);
   }
 
-  start (): void {
+  start(): void {
     Logger.info('Starting the server');
     this.onAfterInit();
-    this.expressConfig.bindConfig();
+    Api.getApi().onInit();
     this.server.listen(8113);
+    this.mongo.init();
   }
 
   private onError(error: NodeJS.ErrnoException): void {
     if (error.syscall !== 'listen') {
       throw error;
     }
-    let bind = (typeof this.app.port === 'string') ? 'Pipe ' + this.app.port : 'Port ' + this.app.port;
+    const bind =
+      typeof this.app.get('port') === 'string'
+        ? 'Pipe ' + this.app.get('port')
+        : 'Port ' + this.app.get('port');
+    this.app.get('port');
     switch (error.code) {
       case 'EACCES':
-        Logger.error(`${bind} requires elevated privileges`);
+        Logger.error((`${bind} requires elevated privileges` as unknown) as Error);
         process.exit(1);
-        break;
       case 'EADDRINUSE':
-        Logger.error(`${bind} is already in use`);
+        Logger.error((`${bind} is already in use` as unknown) as Error);
         process.exit(1);
-        break;
       default:
         throw error;
     }
   }
 
   private onListening(): void {
-    const self: any = this;
-    let addr = self.address();
-    let bind = (typeof addr === 'string') ? `pipe ${addr}` : `port ${addr.port}`;
+    const addr = ((this as unknown) as http.Server).address();
+    const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
     Logger.info(`Listening on ${bind}`);
 
     process.on('unhandledRejection', (error: any) => {
@@ -70,7 +57,7 @@ export class Server {
     });
   }
 
-  public getApp() {
+  public getApp(): express.Application {
     return this.app;
   }
 }

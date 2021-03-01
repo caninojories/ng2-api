@@ -1,27 +1,16 @@
 import TYPES from './constant/types';
-import {
-  Container
-} from 'inversify';
-import {
-  Server
-} from './server';
-import {
-  Injectable
-} from './util-lib/injectable';
+import { Server } from './server';
+import { container } from './util-lib/injectable';
 
 export class ng2Api {
-  constructor () {
-    this.injectableContainer.bind<Injectable>(TYPES.Injectable).to(Injectable);
-    this.injectable = this.injectableContainer.get<Injectable>(TYPES.Injectable);
-
+  constructor() {
     this.onInit();
   }
 
-  private injectableContainer = new Container();
-  private injectable: Injectable;
+  private server: Server = container.get<Server>(TYPES.Server);
 
   private onInit(): void {
-    this.injectable.server.start();
+    this.server.start();
   }
 }
 
